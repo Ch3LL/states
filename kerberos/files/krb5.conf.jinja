@@ -1,0 +1,24 @@
+{%- set kerberos = pillar.get('kerberos', {}) %}
+[libdefaults]
+  {%- set libdefaults = kerberos.get('libdefaults', {}) %}
+    clockskew = {{ libdefaults.clockskew }}
+    default_realm = {{ libdefaults.default_realm }}
+    forwardable = {{ libdefaults.forwardable }}
+    krb4_get_tickets = {{ libdefaults.krb4_get_tickets }}
+    ticket_lifetime = {{ libdefaults.ticket_lifetime }}
+    ch3ll_instance_resolve = {{ libdefaults.ch3ll_instance_resolve  }}
+
+[realms]
+  {%- set realms = kerberos.get('realms', {}) %}
+   CH3LL.TEST.COM = {
+     admin_server = {{ realms.admin_server }}
+     default_domain = {{ realms.default_domain  }}
+     {%- for kdc in realms.kdc %}
+     kdc = {{ kdc }}
+     {%- endfor %}
+     ch3ll_domains = {{ realms.v4_domains }}
+   }
+
+[domain_realm]
+  {%- set domain = kerberos.get('domain_realm', {}) %}
+  .test.com = {{ domain.ch3ll_test }}
